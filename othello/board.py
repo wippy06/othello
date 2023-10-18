@@ -76,41 +76,8 @@ class Board:
         pass
 
 
-    def check_lane(self, rows,cols,anticolour,direction):
+    def check_lane(self, row,col,anticolour,function):
         moves = []
-        function = 0
-        if direction == "d":
-            row = rows+1
-            col = cols
-            function = ["+x","+0"]
-        elif direction == "u":
-            row = rows-1
-            col = cols
-            function = ["-x","+0"]
-        elif direction == "r":
-            row = rows
-            col = cols+1
-            function = ["+0","+x"]
-        elif direction == "l":
-            row = rows
-            col = cols-1
-            function = ["+0","-x"]
-        elif direction == "dr":
-            row = rows+1
-            col = cols+1
-            function = ["+x","+x"]
-        elif direction == "dl":
-            row = rows+1
-            col = cols-1
-            function = ["+x","-x"]
-        elif direction == "ur":
-            row = rows-1
-            col = cols+1
-            function = ["-x","+x"]
-        else:
-            row = rows-1
-            col = cols-1
-            function = ["-x","-x"]
 
         if self.get_piece(row,col) != 0 and self.get_piece(row,col).colour == anticolour:
                 minimum = min(COLS-(col),ROWS-(row))
@@ -126,16 +93,16 @@ class Board:
         for piece in self.get_all_pieces(colour):
             row = piece.row
             col = piece.col
-            moves.append(self.check_lane(row, col, anticolour, "d"))
-            moves.append(self.check_lane(row, col, anticolour, "u"))
-            moves.append(self.check_lane(row, col, anticolour, "r"))
-            moves.append(self.check_lane(row, col, anticolour, "l"))
-            moves.append(self.check_lane(row, col, anticolour, "dr"))
-            moves.append(self.check_lane(row, col, anticolour, "dl"))
-            moves.append(self.check_lane(row, col, anticolour, "ur"))
-            moves.append(self.check_lane(row, col, anticolour, "ul"))
+            moves.append(self.check_lane(row+1, col, anticolour, ["+x","+0"]))
+            moves.append(self.check_lane(row-1, col, anticolour, ["-x","+0"]))
+            moves.append(self.check_lane(row, col+1, anticolour, ["+0","+x"]))
+            moves.append(self.check_lane(row, col-1, anticolour, ["+0","-x"]))
+            moves.append(self.check_lane(row+1, col+1, anticolour, ["+x","+x"]))
+            moves.append(self.check_lane(row+1, col-1, anticolour, ["+x","-x"]))
+            moves.append(self.check_lane(row-1, col+1, anticolour, ["-x","+x"]))
+            moves.append(self.check_lane(row-1, col-1, anticolour, ["-x","-x"]))
 
-        moves.sort(key=self.key)
+        moves.sort(key=self.key_by_len)
 
         for x in range(len(moves)):
             if moves[0] == []:
@@ -144,7 +111,9 @@ class Board:
         moves_list = []
         for x in range(len(moves)):
             moves_list.append(moves[x][0])
+            
         return moves_list
     
-    def key(self,e):
+    def key_by_len(self,e):
         return len(e)
+
