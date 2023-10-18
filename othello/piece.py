@@ -1,4 +1,4 @@
-from .constants import SQUARE_SIZE, GREY
+from .constants import SQUARE_SIZE, GREY, BLACK, WHITE
 import pygame
 
 class Piece:
@@ -24,5 +24,11 @@ class Piece:
         pygame.draw.circle(win, GREY, (self.x, self.y), radius+self.OUTLINE)
         pygame.draw.circle(win, self.colour, (self.x, self.y), radius)
 
+    def flip_colour(self):
+        if self.colour == BLACK:
+            self.colour==WHITE
+        else:
+            self.colour == BLACK
+
     def __repr__(self):
-        return str(self.colour)
+        return "({},{})".format(self.row,self.col)

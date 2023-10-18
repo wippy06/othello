@@ -28,7 +28,7 @@ class Game:
     def select(self,row,col):
         for moves in self.board.get_valid_moves(self.turn, self.notTurn):
             if row == moves[0] and col == moves[1]:
-                self.board.turn(row,col,self.turn)
+                self.board.turn(row,col,self.turn, self.notTurn)
 
     def draw_valid_moves(self, moves):
         for move in moves:
