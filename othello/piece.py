@@ -24,10 +24,5 @@ class Piece:
         pygame.draw.circle(win, GREY, (self.x, self.y), radius+self.OUTLINE)
         pygame.draw.circle(win, self.colour, (self.x, self.y), radius)
 
-    def move(self, row, col):
-        self.row = row
-        self.col = col
-        self.calc_pos()
-
     def __repr__(self):
         return str(self.colour)

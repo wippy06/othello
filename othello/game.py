@@ -15,8 +15,9 @@ class Game:
     def _init(self):
         self.selected = None
         self.board = Board()
-        self.turn = WHITE
-        self.valid_moves = self.board.get_valid_moves(BLACK, WHITE)
+        self.turn = BLACK
+        self.notTurn = WHITE
+        self.valid_moves = self.board.get_valid_moves(self.turn, self.notTurn)
 
     def winner(self):
         return self.board.winner()
@@ -25,14 +26,14 @@ class Game:
         self._init()
 
     def select(self,row,col):
-        pass
-
-    def _move(self,row,col):
-        pass
+        for moves in self.board.get_valid_moves(self.turn, self.notTurn):
+            if row == moves[0] and col == moves[1]:
+                self.board.turn(row,col,self.turn)
 
     def draw_valid_moves(self, moves):
         for move in moves:
-            row, col = move
+            row=move[0]
+            col=move[1]
             pygame.draw.circle(self.win, BLUE, (col * SQUARE_SIZE + SQUARE_SIZE//2, row * SQUARE_SIZE + SQUARE_SIZE//2), 15)
 
     def change_turn(self):
@@ -40,7 +41,9 @@ class Game:
         #swaps turns
         if self.turn == WHITE:
             self.turn = BLACK
+            self.notTurn = WHITE
         else:
             self.turn = WHITE
+            self.notTurn = BLACK
 
     

@@ -18,8 +18,20 @@ class Board:
             for col in range (row % 2, ROWS, 2):
                 pygame.draw.rect(win, LIME, (row*SQUARE_SIZE, col*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
-    def turn(self):
+    def turn(self, row, col, colour):
+        self.addPiece(row, col, colour)
+        pieces = self.findPieces(row, col, colour)
+        self.flipPieces(pieces,colour)
+
+    def addPiece(self, row,col,colour):
+        self.board[row][col] = Piece(row,col, colour)
+
+    def findPieces(self, row,col,colour):
         pass
+
+    def flipPieces(self, pieces, colour):
+        pass
+
 
     def get_all_pieces(self, colour):
         pieces = []
@@ -37,7 +49,7 @@ class Board:
             self.board.append([])
             for col in range(COLS):
 
-                if (col == 3 and row == 3) or (col == 4 and row == 4):
+                if (col == 3 and row == 3) or (col == 4 and row == 4)or (col == 4 and row == 5):
 
                     self.board[row].append(Piece(row,col, WHITE))
                 
@@ -63,71 +75,76 @@ class Board:
     def winner(self):
         pass
 
+
+    def check_lane(self, rows,cols,anticolour,direction):
+        moves = []
+        function = 0
+        if direction == "d":
+            row = rows+1
+            col = cols
+            function = ["+x","+0"]
+        elif direction == "u":
+            row = rows-1
+            col = cols
+            function = ["-x","+0"]
+        elif direction == "r":
+            row = rows
+            col = cols+1
+            function = ["+0","+x"]
+        elif direction == "l":
+            row = rows
+            col = cols-1
+            function = ["+0","-x"]
+        elif direction == "dr":
+            row = rows+1
+            col = cols+1
+            function = ["+x","+x"]
+        elif direction == "dl":
+            row = rows+1
+            col = cols-1
+            function = ["+x","-x"]
+        elif direction == "ur":
+            row = rows-1
+            col = cols+1
+            function = ["-x","+x"]
+        else:
+            row = rows-1
+            col = cols-1
+            function = ["-x","-x"]
+
+        if self.get_piece(row,col) != 0 and self.get_piece(row,col).colour == anticolour:
+                minimum = min(COLS-(col),ROWS-(row))
+                for x in range(minimum):                   
+                    if self.get_piece(eval(str(row)+function[0]),eval(str(col)+function[1])) == 0:
+                        moves.append((int(eval(str(row)+function[0])),int(eval(str(col)+function[1]))))
+                        break
+        return moves
+   
+
     def get_valid_moves(self, colour, anticolour):
         moves = []
         for piece in self.get_all_pieces(colour):
             row = piece.row
             col = piece.col
-            # if there is an opposite piece below the piece that is not a 0
-            if self.get_piece(row+1,col) != 0 and self.get_piece(row+1,col).colour == anticolour:
-                #find how many in the col below the piece
-                for x in range(ROWS-(row+1)):
-                    #if there is an empty space add that coordinate to a list
-                    if self.get_piece(row + x +1,col) == 0:
-                        moves.append((row + x +1,col))
-                        break
+            moves.append(self.check_lane(row, col, anticolour, "d"))
+            moves.append(self.check_lane(row, col, anticolour, "u"))
+            moves.append(self.check_lane(row, col, anticolour, "r"))
+            moves.append(self.check_lane(row, col, anticolour, "l"))
+            moves.append(self.check_lane(row, col, anticolour, "dr"))
+            moves.append(self.check_lane(row, col, anticolour, "dl"))
+            moves.append(self.check_lane(row, col, anticolour, "ur"))
+            moves.append(self.check_lane(row, col, anticolour, "ul"))
 
-            #same for above
-            if self.get_piece(row-1,col) != 0 and self.get_piece(row-1,col).colour == anticolour:
-                for x in range(ROWS-(row-1)):
-                    if self.get_piece(row - x -1,col) == 0:
-                        moves.append((row - x -1,col))
-                        break
-            
-            #same for to the right
-            if self.get_piece(row,col+1) != 0 and self.get_piece(row,col+1).colour == anticolour:
-                for x in range(COLS-(col+1)):
-                    if self.get_piece(row,col + x +1) == 0:
-                        moves.append((row,col + x +1))
-                        break
-            
-            #same for to the left
-            if self.get_piece(row,col-1) != 0 and self.get_piece(row,col-1).colour == anticolour:
-                for x in range(COLS-(col-1)):
-                    if self.get_piece(row,col - x -1) == 0:
-                        moves.append((row,col - x -1))
-                        break
+        moves.sort(key=self.key)
 
-            #down right
-            if self.get_piece(row+1,col+1) != 0 and self.get_piece(row+1,col+1).colour == anticolour:
-                minimum = min(COLS-(col+1),ROWS-(row+1))
-                for x in range(minimum):                   
-                    if self.get_piece(row+x+1,col+x+1) == 0:
-                        moves.append((row+x+1,col+x+1))
-                        break
-            
-            #down left
-            if self.get_piece(row+1,col-1) != 0 and self.get_piece(row+1,col-1).colour == anticolour:
-                minimum = min(COLS-(col-1),ROWS-(row+1))
-                for x in range(minimum):                   
-                    if self.get_piece(row+x+1,col-x-1) == 0:
-                        moves.append((row+x+1,col-x-1))
-                        break
+        for x in range(len(moves)):
+            if moves[0] == []:
+                moves.pop(0)
 
-            #up right
-            if self.get_piece(row-1,col+1) != 0 and self.get_piece(row-1,col+1).colour == anticolour:
-                minimum = min(COLS-(col+1),ROWS-(row-1))
-                for x in range(minimum):                   
-                    if self.get_piece(row-x-1,col+x+1) == 0:
-                        moves.append((row-x-1,col+x+1))
-                        break
-
-            #up left
-            if self.get_piece(row-1,col-1) != 0 and self.get_piece(row-1,col-1).colour == anticolour:
-                minimum = min(COLS-(col-1),ROWS-(row-1))
-                for x in range(minimum):                   
-                    if self.get_piece(row-x-1,col-x-1) == 0:
-                        moves.append((row-x-1,col-x-1))
-                        break
-
-        return moves
+        moves_list = []
+        for x in range(len(moves)):
+            moves_list.append(moves[x][0])
+        return moves_list
+    
+    def key(self,e):
+        return len(e)
