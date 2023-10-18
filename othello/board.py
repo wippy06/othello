@@ -31,27 +31,17 @@ class Board:
         pieces = []
 
         #check lanes for pieces
-        pieces.append(self.check_lane(row+1, col  , anticolour, ["+x","+0"], True))
-        pieces.append(self.check_lane(row-1, col  , anticolour, ["-x","+0"], True))
-        pieces.append(self.check_lane(row  , col+1, anticolour, ["+0","+x"], True))
-        pieces.append(self.check_lane(row  , col-1, anticolour, ["+0","-x"], True))
-        pieces.append(self.check_lane(row+1, col+1, anticolour, ["+x","+x"], True))
-        pieces.append(self.check_lane(row+1, col-1, anticolour, ["+x","-x"], True))
-        pieces.append(self.check_lane(row-1, col+1, anticolour, ["-x","+x"], True))
-        pieces.append(self.check_lane(row-1, col-1, anticolour, ["-x","-x"], True))
-
-        pieces.sort(key=self.key_by_len)
-
-        for x in range(len(pieces)):
-            if pieces[0] == []:
-                pieces.pop(0)
-
-        piece_list = []
-        for x in range(len(pieces)):
-            piece_list.append(pieces[x][0])
-            
-        return piece_list
-
+        pieces = [*pieces, *(self.check_lane(row+1, col  , anticolour, ["+x","+0"], True))]
+        pieces = [*pieces, *(self.check_lane(row-1, col  , anticolour, ["-x","+0"], True))]
+        pieces = [*pieces, *(self.check_lane(row  , col+1, anticolour, ["+0","+x"], True))]
+        pieces = [*pieces, *(self.check_lane(row  , col-1, anticolour, ["+0","-x"], True))]
+        pieces = [*pieces, *(self.check_lane(row+1, col+1, anticolour, ["+x","+x"], True))]
+        pieces = [*pieces, *(self.check_lane(row+1, col-1, anticolour, ["+x","-x"], True))]
+        pieces = [*pieces, *(self.check_lane(row-1, col+1, anticolour, ["-x","+x"], True))]
+        pieces = [*pieces, *(self.check_lane(row-1, col-1, anticolour, ["-x","-x"], True))]
+     
+        return pieces
+    
 
     def flipPieces(self, pieces):
         for piece in pieces:
