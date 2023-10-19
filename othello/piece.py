@@ -24,11 +24,8 @@ class Piece:
         pygame.draw.circle(win, GREY, (self.x, self.y), radius+self.OUTLINE)
         pygame.draw.circle(win, self.colour, (self.x, self.y), radius)
 
-    def flip_colour(self):
-        if self.colour == BLACK:
-            self.colour==WHITE
-        else:
-            self.colour == BLACK
+    def set_colour(self, colour):
+        self.colour = colour
 
     def __repr__(self):
         return "({},{})".format(self.row,self.col)
