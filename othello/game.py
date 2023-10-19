@@ -10,7 +10,7 @@ class Game:
     def update(self):
         self.board.draw(self.win)
         self.valid_moves = self.board.get_valid_moves(self.turn, self.notTurn)
-        self.draw_valid_moves(self.valid_moves)
+        self.draw_valid_moves(self.valid_moves,self.turn)
         pygame.display.update()
 
     def _init(self):
@@ -34,10 +34,10 @@ class Game:
                 break
         
 
-    def draw_valid_moves(self, moves):
+    def draw_valid_moves(self, moves,colour):
         for move in moves:
             row,col=move
-            pygame.draw.circle(self.win, BLUE, (col * SQUARE_SIZE + SQUARE_SIZE//2, row * SQUARE_SIZE + SQUARE_SIZE//2), 15)
+            pygame.draw.circle(self.win, colour, (col * SQUARE_SIZE + SQUARE_SIZE//2, row * SQUARE_SIZE + SQUARE_SIZE//2), 15)
 
     def change_turn(self):
         self.valid_moves={}

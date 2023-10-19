@@ -75,7 +75,6 @@ class Board:
             for colOffset in area:
                 if not (rowOffset ==0 and colOffset == 0):
                     pieces = [*pieces, *(self.check_lane([row,col], [rowOffset,colOffset], anticolour, True))]
-                    print([rowOffset,colOffset])
 
         return pieces
     
