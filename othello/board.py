@@ -18,6 +18,48 @@ class Board:
             for col in range (row % 2, ROWS, 2):
                 pygame.draw.rect(win, LIME, (row*SQUARE_SIZE, col*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
+    def get_all_pieces(self, colour):
+        pieces = []
+        for row in self.board:
+            for piece in row:
+                if piece!= 0 and piece.colour == colour:
+                    pieces.append(piece)
+        return pieces 
+
+    def get_piece(self, row, col):
+        return self.board[row][col]
+
+    def create_board(self):
+        for row in range(ROWS):
+            self.board.append([])
+            for col in range(COLS):
+
+                if (col == 3 and row == 3) or (col == 4 and row == 4) or (col == 5 and row == 5):
+
+                    self.board[row].append(Piece(row,col, WHITE))
+                
+                elif (col == 4 and row == 3) or (col == 3 and row == 4):
+
+                    self.board[row].append(Piece(row,col, BLACK))
+
+
+                else:
+                    self.board[row].append(0)
+
+    def draw(self,win):
+        #draws squares and pieces
+        self.draw_squares(win)
+       #cycles through squares in the array to check if piece needs to be drawn
+        for row in range(ROWS):
+            for col in range(COLS):
+                piece = self.board[row][col]
+                if piece != 0:
+                    #piece is drawn if the space in the array is not 0
+                    piece.draw(win)
+
+    def winner(self):
+        pass
+
     def turn(self, row, col, colour, anticolour):
         self.addPiece(row, col, colour)
         pieces = self.findPieces(row, col, anticolour)
@@ -46,55 +88,16 @@ class Board:
     def flipPieces(self, pieces, colour):
         for piece in pieces:
             piece.set_colour(colour)
-        print(pieces)
 
-
-    def get_all_pieces(self, colour):
-        pieces = []
-        for row in self.board:
-            for piece in row:
-                if piece!= 0 and piece.colour == colour:
-                    pieces.append(piece)
-        return pieces 
-
-    def get_piece(self, row, col):
-        return self.board[row][col]
-
-    def create_board(self):
-        for row in range(ROWS):
-            self.board.append([])
-            for col in range(COLS):
-
-                if (col == 3 and row == 3) or (col == 4 and row == 4)or (col == 4 and row == 5):
-
-                    self.board[row].append(Piece(row,col, WHITE))
-                
-                elif (col == 4 and row == 3) or (col == 3 and row == 4) or (col == 3 and row == 6):
-
-                    self.board[row].append(Piece(row,col, BLACK))
-
-
-                else:
-                    self.board[row].append(0)
-
-    def draw(self,win):
-        #draws squares and pieces
-        self.draw_squares(win)
-       #cycles through squares in the array to check if piece needs to be drawn
-        for row in range(ROWS):
-            for col in range(COLS):
-                piece = self.board[row][col]
-                if piece != 0:
-                    #piece is drawn if the space in the array is not 0
-                    piece.draw(win)
-
-    def winner(self):
-        pass
 
     def check_lane(self,row,col,anticolour,function, getPieces):
         moves = []
         holding = []
         pieces = []
+
+        if row>=ROWS or col>=ROWS or row<=0 or col <=0 :
+            return []
+
         #checks if next piece is opposite colour
         if self.get_piece(row,col) != 0 and self.get_piece(row,col).colour == anticolour:
                 #creates minimum so no out of range index error
@@ -113,6 +116,7 @@ class Board:
                         #append move
                         moves.append((int(eval(str(row)+function[0])),int(eval(str(col)+function[1]))))
                         break
+
         if getPieces:
             return pieces
         else:
@@ -133,7 +137,4 @@ class Board:
             moves = [*moves, *(self.check_lane(row-1, col-1, anticolour, ["-x","-x"], False))]
  
         return moves
-    
-    def key_by_len(self,e):
-        return len(e)
 

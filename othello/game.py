@@ -9,6 +9,7 @@ class Game:
 
     def update(self):
         self.board.draw(self.win)
+        self.valid_moves = self.board.get_valid_moves(self.turn, self.notTurn)
         self.draw_valid_moves(self.valid_moves)
         pygame.display.update()
 
@@ -29,7 +30,9 @@ class Game:
         for moves in self.board.get_valid_moves(self.turn, self.notTurn):
             if row == moves[0] and col == moves[1]:
                 self.board.turn(row,col,self.turn, self.notTurn)
-        self.update()
+                self.change_turn()
+                break
+        
 
     def draw_valid_moves(self, moves):
         for move in moves:
