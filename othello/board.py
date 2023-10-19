@@ -34,7 +34,7 @@ class Board:
             self.board.append([])
             for col in range(COLS):
 
-                if (col == 3 and row == 3) or (col == 4 and row == 4) or (col == 5 and row == 5):
+                if (col == 3 and row == 3) or (col == 4 and row == 4):
 
                     self.board[row].append(Piece(row,col, WHITE))
                 
@@ -42,14 +42,13 @@ class Board:
 
                     self.board[row].append(Piece(row,col, BLACK))
 
-
                 else:
                     self.board[row].append(0)
 
     def draw(self,win):
         #draws squares and pieces
         self.draw_squares(win)
-       #cycles through squares in the array to check if piece needs to be drawn
+        #cycles through squares in the array to check if piece needs to be drawn
         for row in range(ROWS):
             for col in range(COLS):
                 piece = self.board[row][col]
@@ -65,23 +64,19 @@ class Board:
         pieces = self.findPieces(row, col, anticolour)
         self.flipPieces(pieces, colour)
 
-
     def addPiece(self, row,col,colour):
         self.board[row][col] = Piece(row,col, colour)
 
     def findPieces(self, row,col,anticolour):
         pieces = []
 
-        #check lanes for pieces
-        pieces = [*pieces, *(self.check_lane(row+1, col  , anticolour, ["+x","+0"], True))]
-        pieces = [*pieces, *(self.check_lane(row-1, col  , anticolour, ["-x","+0"], True))]
-        pieces = [*pieces, *(self.check_lane(row  , col+1, anticolour, ["+0","+x"], True))]
-        pieces = [*pieces, *(self.check_lane(row  , col-1, anticolour, ["+0","-x"], True))]
-        pieces = [*pieces, *(self.check_lane(row+1, col+1, anticolour, ["+x","+x"], True))]
-        pieces = [*pieces, *(self.check_lane(row+1, col-1, anticolour, ["+x","-x"], True))]
-        pieces = [*pieces, *(self.check_lane(row-1, col+1, anticolour, ["-x","+x"], True))]
-        pieces = [*pieces, *(self.check_lane(row-1, col-1, anticolour, ["-x","-x"], True))]
-     
+        area=[-1,0,1]
+        for rowOffset in area:
+            for colOffset in area:
+                if not (rowOffset ==0 and colOffset == 0):
+                    pieces = [*pieces, *(self.check_lane([row,col], [rowOffset,colOffset], anticolour, True))]
+                    print([rowOffset,colOffset])
+
         return pieces
     
 
@@ -89,58 +84,62 @@ class Board:
         for piece in pieces:
             piece.set_colour(colour)
 
-
-    def check_lane(self,row,col,anticolour,function, getPieces):
+    def check_lane(self, position, direction, oppColour, getPieces):
         moves = []
-        holding = []
         pieces = []
 
-        if row>ROWS-1:
-            row = ROWS-1
-        if col>COLS-1:
-            col = COLS-1
-        
-        
+        nextRow = position[0] + direction[0]
+        nextCol = position[1] + direction[1]
 
+        newPos = [nextRow, nextCol]
+        
+        if(nextRow > ROWS-1 or nextCol > COLS-1 or nextRow < 0 or nextCol < 0):
+            return []
+        
         #checks if next piece is opposite colour
-        if self.get_piece(row,col) != 0 and self.get_piece(row,col).colour == anticolour:
-                #creates minimum so no out of range index error
-                minimum = min(COLS-(col),ROWS-(row))
-                #goes step by step through to the edge of the board
-                for x in range(minimum):
-                    #if the pieces are needed checks if the next piece in line is opposite colour 
-                    if getPieces and self.get_piece(eval(str(row)+function[0]),eval(str(col)+function[1])) != 0 and self.get_piece(eval(str(row)+function[0]),eval(str(col)+function[1])).colour == anticolour:
-                        #appends piece
-                        piece = self.get_piece(eval(str(row)+function[0]),eval(str(col)+function[1]))
-                        holding.append(piece)
-                    if getPieces and self.get_piece(eval(str(row)+function[0]),eval(str(col)+function[1])) != 0 and self.get_piece(eval(str(row)+function[0]),eval(str(col)+function[1])).colour != anticolour:
-                        pieces = [*pieces,*holding]
-                    #elif next piece is 0 after opposite piece
-                    elif getPieces == False and self.get_piece(eval(str(row)+function[0]),eval(str(col)+function[1])) == 0:
-                        #append move
-                        moves.append((int(eval(str(row)+function[0])),int(eval(str(col)+function[1]))))
-                        break
-                    elif getPieces == False and self.get_piece(eval(str(row)+function[0]),eval(str(col)+function[1])).colour != anticolour:
-                        break
-
-        if getPieces:
+        pieceColour = self.getColourAtPosition(newPos, oppColour)
+        if pieceColour == -1:
+            #opposite colour
+            pieces = self.check_lane(newPos, direction, oppColour, getPieces)
+            
+            if getPieces and len(pieces) >0:
+                pieces.append(self.get_piece(newPos[0], newPos[1]))    
             return pieces
+        
+        elif pieceColour == 1:
+            #same colour as current player
+            if getPieces:
+                #return pieces
+                return [self.get_piece(newPos[0], newPos[1])]
+            
+        elif pieceColour == 0 and self.getColourAtPosition(position, oppColour)== -1:
+            #empty space on newPos and at posiion its same colour as opposite player
+            moves.append(newPos)
+            if not getPieces:
+                return moves
+            
+        return[] 
+    
+    def getColourAtPosition(self, position, anticolour):
+        piece = self.get_piece(position[0], position[1])
+        if piece == 0:
+            return 0
+        elif piece.colour == anticolour:
+            return -1
         else:
-            return moves
+            return 1
 
     def get_valid_moves(self, colour, anticolour):
         moves = []
         for piece in self.get_all_pieces(colour):
             row = piece.row
             col = piece.col
-            moves = [*moves, *(self.check_lane(row+1, col  , anticolour, ["+x","+0"], False))]
-            moves = [*moves, *(self.check_lane(row-1, col  , anticolour, ["-x","+0"], False))]
-            moves = [*moves, *(self.check_lane(row  , col+1, anticolour, ["+0","+x"], False))]
-            moves = [*moves, *(self.check_lane(row  , col-1, anticolour, ["+0","-x"], False))]
-            moves = [*moves, *(self.check_lane(row+1, col+1, anticolour, ["+x","+x"], False))]
-            moves = [*moves, *(self.check_lane(row+1, col-1, anticolour, ["+x","-x"], False))]
-            moves = [*moves, *(self.check_lane(row-1, col+1, anticolour, ["-x","+x"], False))]
-            moves = [*moves, *(self.check_lane(row-1, col-1, anticolour, ["-x","-x"], False))]
- 
+            
+            area=[-1,0,1]
+            for rowOffset in area:
+                for colOffset in area:
+                    if not (rowOffset ==0 and colOffset == 0):
+                        moves = [*moves, *(self.check_lane([row,col], [rowOffset,colOffset], anticolour, False))]
+
         return moves
 
