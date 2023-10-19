@@ -95,8 +95,12 @@ class Board:
         holding = []
         pieces = []
 
-        if row>=ROWS or col>=ROWS or row<=0 or col <=0 :
-            return []
+        if row>ROWS-1:
+            row = ROWS-1
+        if col>COLS-1:
+            col = COLS-1
+        
+        
 
         #checks if next piece is opposite colour
         if self.get_piece(row,col) != 0 and self.get_piece(row,col).colour == anticolour:
@@ -110,11 +114,13 @@ class Board:
                         piece = self.get_piece(eval(str(row)+function[0]),eval(str(col)+function[1]))
                         holding.append(piece)
                     if getPieces and self.get_piece(eval(str(row)+function[0]),eval(str(col)+function[1])) != 0 and self.get_piece(eval(str(row)+function[0]),eval(str(col)+function[1])).colour != anticolour:
-                        pieces = [*pieces,*holding]    
+                        pieces = [*pieces,*holding]
                     #elif next piece is 0 after opposite piece
-                    elif self.get_piece(eval(str(row)+function[0]),eval(str(col)+function[1])) == 0:
+                    elif getPieces == False and self.get_piece(eval(str(row)+function[0]),eval(str(col)+function[1])) == 0:
                         #append move
                         moves.append((int(eval(str(row)+function[0])),int(eval(str(col)+function[1]))))
+                        break
+                    elif getPieces == False and self.get_piece(eval(str(row)+function[0]),eval(str(col)+function[1])).colour != anticolour:
                         break
 
         if getPieces:
