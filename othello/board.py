@@ -6,9 +6,6 @@ class Board:
     def __init__(self):
         self.board = []
         self.blackCount = self.whiteCount = 2
-        self.blackValid = True
-        self.whiteValid = True
-        self.gameOver = False
 
         #runs the create_board function on start up to set pieces
         self.create_board()
@@ -37,10 +34,10 @@ class Board:
         for row in range(ROWS):
             self.board.append([])
             for col in range(COLS):
-                if (col == 3 and row == 3) or (col == 4 and row == 4):
+                if (col == COLS//2-1 and row == ROWS//2-1) or (col == COLS//2 and row == ROWS//2):
                     self.board[row].append(Piece(row,col, WHITE))
                 
-                elif (col == 4 and row == 3) or (col == 3 and row == 4):
+                elif (col == COLS//2 and row == ROWS//2-1) or (col == COLS//2-1 and row == ROWS//2):
                     self.board[row].append(Piece(row,col, BLACK))
 
                 else:
