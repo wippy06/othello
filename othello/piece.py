@@ -3,8 +3,8 @@ import pygame
 
 class Piece:
     #PADDING determines piece size bidder padding means smaller piece
-    PADDING = 15
-    OUTLINE = 2
+    PADDING = SQUARE_SIZE*0.15
+    OUTLINE = SQUARE_SIZE*0.02
 
     def __init__(self,row,col,colour):
         self.row = row

@@ -2,7 +2,8 @@ import pygame
 
 #size constants
 WIDTH, HEIGHT = 800,800
-ROWS, COLS = 8, 8
+#must be even and >= 4
+ROWS = COLS = 4
 SQUARE_SIZE = WIDTH//COLS
 
 #RGB colour constants
@@ -14,5 +15,5 @@ BLACK = (0,0,0)
 GREY = (128,128,128)
 
 #checker board
-LIME = (0,180,0)
+LIME = (0,186,0)
 GREEN = (0, 102, 0)

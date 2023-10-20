@@ -55,7 +55,9 @@ class Board:
                     piece.draw(win)
 
     def winner(self):
+        #if there aren't valid moves for both sides
         if self.movable(BLACK,WHITE)==False and self.movable(WHITE,BLACK)==False:
+            # return result
             if self.blackCount>self.whiteCount:
                 return(BLACK, self.blackCount, self.whiteCount)
             elif self.blackCount<self.whiteCount:
@@ -80,6 +82,7 @@ class Board:
     def findPieces(self, row,col,anticolour):
         pieces = []
 
+        #checks_lane function in all directions
         area=[-1,0,1]
         for rowOffset in area:
             for colOffset in area:
@@ -90,6 +93,7 @@ class Board:
     
 
     def flipPieces(self, pieces, colour):
+        #when piece is flipped change the count as well
         for piece in pieces:
             piece.set_colour(colour)
         if colour == BLACK:
@@ -115,8 +119,11 @@ class Board:
         pieceColour = self.getColourAtPosition(newPos, oppColour)
         if pieceColour == -1:
             #opposite colour
+
+            #recursive function 
             pieces = self.check_lane(newPos, direction, oppColour, getPieces)
             
+            #only adds piece if there is something in the array already (once the end of the line has been reached)
             if getPieces and len(pieces) >0:
                 pieces.append(self.get_piece(newPos[0], newPos[1]))    
             return pieces
@@ -124,12 +131,13 @@ class Board:
         elif pieceColour == 1 and self.getColourAtPosition(position, oppColour)== -1:
             #same colour as current player
             if getPieces:
-                #return pieces
+                #return pieces once it gets to the end of the line and adds it to the pieces from the previous function call
                 return [self.get_piece(newPos[0], newPos[1])]
             
         elif pieceColour == 0 and self.getColourAtPosition(position, oppColour)== -1:
             #empty space on newPos and at posiion its same colour as opposite player
             moves.append(newPos)
+            #only returns if moves is wanted
             if not getPieces:
                 return moves
             
