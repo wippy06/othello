@@ -5,6 +5,7 @@ from .piece import Piece
 class Board:
     def __init__(self):
         self.board = []
+        self.blackCount = self.whiteCount = 2
 
         #runs the create_board function on start up to set pieces
         self.create_board()
@@ -74,7 +75,7 @@ class Board:
         for rowOffset in area:
             for colOffset in area:
                 if not (rowOffset ==0 and colOffset == 0):
-                    pieces = [*pieces, *(self.check_lane([row,col], [rowOffset,colOffset], anticolour, True))]
+                    pieces = [*pieces, *(self.check_lane([row,col], [rowOffset,colOffset], anticolour, True))[1:]]
 
         return pieces
     
@@ -82,6 +83,13 @@ class Board:
     def flipPieces(self, pieces, colour):
         for piece in pieces:
             piece.set_colour(colour)
+        if colour == BLACK:
+            self.blackCount = self.blackCount + (len(pieces)+1)
+            self.whiteCount = self.whiteCount - len(pieces)
+        else:
+            self.blackCount = self.blackCount - len(pieces)
+            self.whiteCount = self.whiteCount + (len(pieces)+1)
+        print(pieces,self.blackCount, self.whiteCount)
 
     def check_lane(self, position, direction, oppColour, getPieces):
         moves = []
@@ -105,7 +113,7 @@ class Board:
                 pieces.append(self.get_piece(newPos[0], newPos[1]))    
             return pieces
         
-        elif pieceColour == 1:
+        elif pieceColour == 1 and self.getColourAtPosition(position, oppColour)== -1:
             #same colour as current player
             if getPieces:
                 #return pieces
