@@ -53,4 +53,16 @@ class Game:
             self.turn = WHITE
             self.notTurn = BLACK
 
+    def get_board(self):
+        return self.board
+    
+    def ai_move(self,board):
+        if self.board.board != board.board:
+            self.board = board
+            self.change_turn()
+            return True
+
+        else:
+            return False
+
     

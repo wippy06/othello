@@ -1,5 +1,5 @@
 import pygame
-from .constants import GREEN, ROWS, LIME, SQUARE_SIZE, COLS, BLACK, WHITE
+from .constants import GREEN, ROWS, LIME, SQUARE_SIZE, COLS, BLACK, WHITE, AI
 from .piece import Piece
 
 class Board:
@@ -18,6 +18,13 @@ class Board:
             #row%2 determines if first square is missed out or not
             for col in range (row % 2, ROWS, 2):
                 pygame.draw.rect(win, LIME, (row*SQUARE_SIZE, col*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+
+    def evaluate(self):
+        if AI == BLACK:    
+            return self.blackCount - self.whiteCount
+        else:
+            return self.whiteCount - self.blackCount
+
 
     def get_all_pieces(self, colour):
         pieces = []
@@ -59,9 +66,9 @@ class Board:
         if self.movable(BLACK,WHITE)==False and self.movable(WHITE,BLACK)==False:
             # return result
             if self.blackCount>self.whiteCount:
-                return(BLACK, self.blackCount, self.whiteCount)
+                return("black wins")
             elif self.blackCount<self.whiteCount:
-                return(WHITE, self.blackCount, self.whiteCount)
+                return("white wins")
             else:
                 return("draw")
 
@@ -153,6 +160,7 @@ class Board:
             return 1
 
     def get_valid_moves(self, colour, anticolour):
+        #gets moves for colour
         moves = []
         for piece in self.get_all_pieces(colour):
             row = piece.row
