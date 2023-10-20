@@ -26,7 +26,6 @@ def main():
         
         if game.winner()!=None:
             print(game.winner())
-            run = False
 
         for event in pygame.event.get():
             
@@ -38,7 +37,10 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
                 row, col = get_row_col_from_mouse(pos)
-                game.select(row, col)
+                select = game.select(row, col)
+                if select == True:
+                    print("pass")
+
 
         #draws the board        
         game.update()

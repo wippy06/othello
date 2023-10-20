@@ -60,9 +60,9 @@ class Board:
     def winner(self):
         if self.movable(BLACK,WHITE)==False and self.movable(WHITE,BLACK)==False:
             if self.blackCount>self.whiteCount:
-                return(BLACK)
+                return(BLACK, self.blackCount, self.whiteCount)
             elif self.blackCount<self.whiteCount:
-                return(WHITE)
+                return(WHITE, self.blackCount, self.whiteCount)
             else:
                 return("draw")
 

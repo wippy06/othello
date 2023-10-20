@@ -32,8 +32,8 @@ class Game:
                 self.board.turn(row,col,self.turn, self.notTurn)
                 self.change_turn()
                 if self.board.get_valid_moves(self.turn,self.notTurn)==[]:
-                    print("pass")
                     self.change_turn()
+                    return(True)
                 break
         
 
