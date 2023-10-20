@@ -20,21 +20,25 @@ def main():
     run = True
     clock = pygame.time.Clock()
     game = Game(WIN)
+    debugSelect = False
 
  
     while run:
         clock.tick(FPS)
 
-        
         if game.turn == AI and AI_ON:
             new_board = minimax(game.get_board(), DEPTH, AI)
-            run = game.ai_move(new_board[1])
-
+            aiSelect = game.ai_move(new_board[1])
+            if aiSelect:
+                print("pass")
         
         if game.winner()!=None:
             print(game.winner())
 
         for event in pygame.event.get():
+
+            if event.type == pygame.KEYDOWN:
+                print(game.turn, game.valid_moves, game.board.evaluate(), game.winner(), debugSelect, game.board.board)
             
             #checks if game is shut down
             if event.type == pygame.QUIT:
@@ -45,7 +49,9 @@ def main():
                 pos = pygame.mouse.get_pos()
                 row, col = get_row_col_from_mouse(pos)
                 select = game.select(row, col)
-                if select == True:
+                debugSelect = select
+                print(select)
+                if select:
                     print("pass")
 
 

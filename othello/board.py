@@ -1,5 +1,5 @@
 import pygame
-from .constants import GREEN, ROWS, LIME, SQUARE_SIZE, COLS, BLACK, WHITE, AI
+from .constants import GREEN, ROWS, LIME, SQUARE_SIZE, COLS, BLACK, WHITE, AI, PIECESQUARETABLE, SETUP, SETUP_ON, WEIGHT
 from .piece import Piece
 
 class Board:
@@ -19,13 +19,6 @@ class Board:
             for col in range (row % 2, ROWS, 2):
                 pygame.draw.rect(win, LIME, (row*SQUARE_SIZE, col*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
-    def evaluate(self):
-        if AI == BLACK:    
-            return self.blackCount - self.whiteCount
-        else:
-            return self.whiteCount - self.blackCount
-
-
     def get_all_pieces(self, colour):
         pieces = []
         for row in self.board:
@@ -41,14 +34,22 @@ class Board:
         for row in range(ROWS):
             self.board.append([])
             for col in range(COLS):
-                if (col == COLS//2-1 and row == ROWS//2-1) or (col == COLS//2 and row == ROWS//2):
-                    self.board[row].append(Piece(row,col, WHITE))
-                
-                elif (col == COLS//2 and row == ROWS//2-1) or (col == COLS//2-1 and row == ROWS//2):
-                    self.board[row].append(Piece(row,col, BLACK))
+                if SETUP_ON == False:
+                    if (col == COLS//2-1 and row == ROWS//2-1) or (col == COLS//2 and row == ROWS//2):
+                        self.board[row].append(Piece(row,col, WHITE))
+                    
+                    elif (col == COLS//2 and row == ROWS//2-1) or (col == COLS//2-1 and row == ROWS//2):
+                        self.board[row].append(Piece(row,col, BLACK))
 
+                    else:
+                        self.board[row].append(0)
                 else:
-                    self.board[row].append(0)
+                    if SETUP[row][col] == WHITE:
+                        self.board[row].append(Piece(row,col, WHITE))
+                    elif SETUP[row][col] == BLACK:
+                        self.board[row].append(Piece(row,col, BLACK))
+                    else:
+                        self.board[row].append(0)
 
     def draw(self,win):
         #draws squares and pieces
@@ -173,4 +174,20 @@ class Board:
                         moves = [*moves, *(self.check_lane([row,col], [rowOffset,colOffset], anticolour, False))]
         
         return moves
+     
+    def evaluate(self):
+        if AI == BLACK:    
+            return (self.blackCount - self.whiteCount)*WEIGHT[0] + (self.pieceSquareTable(BLACK) - self.pieceSquareTable(WHITE))*WEIGHT[1]
+        else:
+            return (self.whiteCount - self.blackCount)*WEIGHT[0] + (self.pieceSquareTable(WHITE) - self.pieceSquareTable(BLACK))*WEIGHT[1]
+        
+    def pieceSquareTable(self, colour):
+        value = 0
+        for lines in self.board:
+            for piece in lines:
+                if piece != 0 and piece.colour == colour:
+                    row = piece.row
+                    col = piece.col
+                    value += PIECESQUARETABLE[row][col]
 
+        return value

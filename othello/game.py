@@ -33,7 +33,7 @@ class Game:
                 self.change_turn()
                 if self.board.get_valid_moves(self.turn,self.notTurn)==[]:
                     self.change_turn()
-                    return(True)
+                    return True
                 break
         
 
@@ -60,9 +60,9 @@ class Game:
         if self.board.board != board.board:
             self.board = board
             self.change_turn()
-            return True
+            if self.board.get_valid_moves(self.turn,self.notTurn)==[]:
+                self.change_turn()
+                return True
 
-        else:
-            return False
 
     

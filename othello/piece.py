@@ -28,4 +28,4 @@ class Piece:
         self.colour = colour
 
     def __repr__(self):
-        return "({},{})".format(self.row,self.col)
+        return "({},{},{})".format(self.row,self.col,self.colour)
