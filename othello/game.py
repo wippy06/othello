@@ -1,5 +1,5 @@
 import pygame
-from .constants import WHITE, BLACK, BLUE, SQUARE_SIZE
+from .constants import WHITE, BLACK, SQUARE_SIZE
 from .board import Board
 
 class Game:
@@ -31,6 +31,9 @@ class Game:
             if row == moves[0] and col == moves[1]:
                 self.board.turn(row,col,self.turn, self.notTurn)
                 self.change_turn()
+                if self.board.get_valid_moves(self.turn,self.notTurn)==[]:
+                    print("pass")
+                    self.change_turn()
                 break
         
 

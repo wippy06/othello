@@ -6,6 +6,9 @@ class Board:
     def __init__(self):
         self.board = []
         self.blackCount = self.whiteCount = 2
+        self.blackValid = True
+        self.whiteValid = True
+        self.gameOver = False
 
         #runs the create_board function on start up to set pieces
         self.create_board()
@@ -34,13 +37,10 @@ class Board:
         for row in range(ROWS):
             self.board.append([])
             for col in range(COLS):
-
                 if (col == 3 and row == 3) or (col == 4 and row == 4):
-
                     self.board[row].append(Piece(row,col, WHITE))
                 
                 elif (col == 4 and row == 3) or (col == 3 and row == 4):
-
                     self.board[row].append(Piece(row,col, BLACK))
 
                 else:
@@ -58,7 +58,19 @@ class Board:
                     piece.draw(win)
 
     def winner(self):
-        pass
+        if self.movable(BLACK,WHITE)==False and self.movable(WHITE,BLACK)==False:
+            if self.blackCount>self.whiteCount:
+                return(BLACK)
+            elif self.blackCount<self.whiteCount:
+                return(WHITE)
+            else:
+                return("draw")
+
+    def movable(self, colour, anticolour):
+        movable = False
+        if self.get_valid_moves(colour, anticolour) != []:
+            movable = True
+        return movable
 
     def turn(self, row, col, colour, anticolour):
         self.addPiece(row, col, colour)
@@ -84,12 +96,11 @@ class Board:
         for piece in pieces:
             piece.set_colour(colour)
         if colour == BLACK:
-            self.blackCount = self.blackCount + (len(pieces)+1)
-            self.whiteCount = self.whiteCount - len(pieces)
+            self.blackCount += (len(pieces)+1)
+            self.whiteCount -= len(pieces)
         else:
-            self.blackCount = self.blackCount - len(pieces)
-            self.whiteCount = self.whiteCount + (len(pieces)+1)
-        print(pieces,self.blackCount, self.whiteCount)
+            self.blackCount -= len(pieces)
+            self.whiteCount += (len(pieces)+1)
 
     def check_lane(self, position, direction, oppColour, getPieces):
         moves = []
@@ -147,6 +158,6 @@ class Board:
                 for colOffset in area:
                     if not (rowOffset ==0 and colOffset == 0):
                         moves = [*moves, *(self.check_lane([row,col], [rowOffset,colOffset], anticolour, False))]
-
+        
         return moves
 
