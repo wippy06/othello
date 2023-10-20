@@ -176,10 +176,16 @@ class Board:
         return moves
      
     def evaluate(self):
-        if AI == BLACK:    
-            return (self.blackCount - self.whiteCount)*WEIGHT[0] + (self.pieceSquareTable(BLACK) - self.pieceSquareTable(WHITE))*WEIGHT[1]
+        if AI == BLACK:  
+            if ROWS == 8 and COLS == 8:  
+                return (self.blackCount - self.whiteCount)*WEIGHT[0] + (self.pieceSquareTable(BLACK) - self.pieceSquareTable(WHITE))*WEIGHT[1]
+            else:
+                return (self.blackCount - self.whiteCount)*WEIGHT[0]
         else:
-            return (self.whiteCount - self.blackCount)*WEIGHT[0] + (self.pieceSquareTable(WHITE) - self.pieceSquareTable(BLACK))*WEIGHT[1]
+            if ROWS == 8 and COLS == 8:
+                return (self.whiteCount - self.blackCount)*WEIGHT[0] + (self.pieceSquareTable(WHITE) - self.pieceSquareTable(BLACK))*WEIGHT[1]
+            else:
+                return (self.blackCount - self.whiteCount)*WEIGHT[0]
         
     def pieceSquareTable(self, colour):
         value = 0
