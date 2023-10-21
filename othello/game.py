@@ -59,10 +59,12 @@ class Game:
     def ai_move(self,board):
         if self.board.board != board.board:
             self.board = board
+            print(self.board.evaluate())
             self.change_turn()
             if self.board.get_valid_moves(self.turn,self.notTurn)==[]:
                 self.change_turn()
                 return True
+            
 
 
     

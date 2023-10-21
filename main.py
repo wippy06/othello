@@ -27,7 +27,7 @@ def main():
         clock.tick(FPS)
 
         if game.turn == AI and AI_ON:
-            new_board = minimax(game.get_board(), DEPTH, AI)
+            new_board = minimax(game.get_board(), DEPTH, AI, float("-inf"), float("inf"))
             aiSelect = game.ai_move(new_board[1])
             if aiSelect:
                 print("pass")
@@ -50,7 +50,6 @@ def main():
                 row, col = get_row_col_from_mouse(pos)
                 select = game.select(row, col)
                 debugSelect = select
-                print(select)
                 if select:
                     print("pass")
 

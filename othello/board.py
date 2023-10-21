@@ -185,7 +185,7 @@ class Board:
             if ROWS == 8 and COLS == 8:
                 return (self.whiteCount - self.blackCount)*WEIGHT[0] + (self.pieceSquareTable(WHITE) - self.pieceSquareTable(BLACK))*WEIGHT[1]
             else:
-                return (self.blackCount - self.whiteCount)*WEIGHT[0]
+                return (self.whiteCount - self.blackCount)*WEIGHT[0]
         
     def pieceSquareTable(self, colour):
         value = 0
