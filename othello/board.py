@@ -1,5 +1,5 @@
 import pygame
-from .constants import GREEN, ROWS, LIME, SQUARE_SIZE, COLS, BLACK, WHITE, AI, PIECESQUARETABLE, SETUP, SETUP_ON, WEIGHT
+from .constants import GREEN, ROWS, LIME, SQUARE_SIZE, COLS, BLACK, WHITE, AI, PIECESQUARETABLE, SETUP, SETUP_ON
 from .piece import Piece
 
 class Board:
@@ -175,17 +175,17 @@ class Board:
         
         return moves
      
-    def evaluate(self):
+    def evaluate(self, weight):
         if AI == BLACK:  
             if ROWS == 8 and COLS == 8:  
-                return (self.blackCount - self.whiteCount)*WEIGHT[0] + (self.pieceSquareTable(BLACK) - self.pieceSquareTable(WHITE))*WEIGHT[1]
+                return (self.blackCount - self.whiteCount)*weight[0] + (self.pieceSquareTable(BLACK) - self.pieceSquareTable(WHITE))*weight[1]
             else:
-                return (self.blackCount - self.whiteCount)*WEIGHT[0]
+                return (self.blackCount - self.whiteCount)*weight[0]
         else:
             if ROWS == 8 and COLS == 8:
-                return (self.whiteCount - self.blackCount)*WEIGHT[0] + (self.pieceSquareTable(WHITE) - self.pieceSquareTable(BLACK))*WEIGHT[1]
+                return (self.whiteCount - self.blackCount)*weight[0] + (self.pieceSquareTable(WHITE) - self.pieceSquareTable(BLACK))*weight[1]
             else:
-                return (self.whiteCount - self.blackCount)*WEIGHT[0]
+                return (self.whiteCount - self.blackCount)*weight[0]
         
     def pieceSquareTable(self, colour):
         value = 0

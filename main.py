@@ -1,5 +1,5 @@
-import pygame
-from othello.constants import WIDTH,HEIGHT, SQUARE_SIZE, AI, DEPTH, AI_ON
+import pygame, time
+from othello.constants import WIDTH,HEIGHT, SQUARE_SIZE, AI, DEPTH, AI_ON, WEIGHT0, WEIGHT1, AI_VS_AI
 from othello.game import Game
 from minimax.algorithm import minimax
 
@@ -27,7 +27,15 @@ def main():
         clock.tick(FPS)
 
         if game.turn == AI and AI_ON:
-            new_board = minimax(game.get_board(), DEPTH, AI, float("-inf"), float("inf"))
+            new_board = minimax(game.get_board(), DEPTH, True, float("-inf"), float("inf"), WEIGHT0)
+            aiSelect = game.ai_move(new_board[1])
+            if aiSelect:
+                print("pass")
+
+        game.update()
+
+        if game.notTurn == AI and AI_VS_AI and AI_ON:
+            new_board = minimax(game.get_board(), DEPTH, False, float("-inf"), float("inf"), WEIGHT1)
             aiSelect = game.ai_move(new_board[1])
             if aiSelect:
                 print("pass")
@@ -38,7 +46,7 @@ def main():
         for event in pygame.event.get():
 
             if event.type == pygame.KEYDOWN:
-                print(game.turn, game.valid_moves, game.board.evaluate(), game.winner(), debugSelect, game.board.board)
+                print(game.turn, game.valid_moves, game.board.evaluate(WEIGHT0), game.board.evaluate(WEIGHT1), game.winner(), debugSelect, game.board.board)
             
             #checks if game is shut down
             if event.type == pygame.QUIT:

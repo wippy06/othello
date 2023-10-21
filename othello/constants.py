@@ -18,10 +18,12 @@ GREEN = (0, 102, 0)
 
 #AI
 AI_ON = True
+AI_VS_AI = True
 AI = WHITE
 PLAYER = BLACK
 DEPTH = 3
-WEIGHT = [0.5,2]
+WEIGHT0 = [0.5,2]
+WEIGHT1 = [2,0.5]
 
     #piece square table
 PIECESQUARETABLE = [

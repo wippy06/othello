@@ -1,19 +1,19 @@
 from copy import deepcopy
 from othello.constants import PLAYER, AI
 
-def minimax(position, depth, max_player, alpha, beta):
+def minimax(position, depth, max_player, alpha, beta, weight):
     #position is an object
     #depth is an int to show how far to go
     #max_player checks if ai wants to maximise sore or minimise score
 
     if depth == 0 or position.winner() != None:
-        return position.evaluate(), position
+        return position.evaluate(weight), position
     
     if max_player:
         maxEval = float("-inf")
         best_move = None
         for move in get_all_moves(position, AI, PLAYER):
-            evaluation = minimax(move, depth-1, False, alpha, beta)[0]
+            evaluation = minimax(move, depth-1, False, alpha, beta, weight)[0]
             maxEval = max(maxEval,evaluation)
 
             alpha = max( alpha, maxEval)
@@ -29,7 +29,7 @@ def minimax(position, depth, max_player, alpha, beta):
         minEval = float("inf")
         best_move = None
         for move in get_all_moves(position, PLAYER, AI):
-            evaluation = minimax(move, depth-1, True, alpha, beta)[0]
+            evaluation = minimax(move, depth-1, True, alpha, beta, weight)[0]
             minEval = min(minEval,evaluation)
 
             beta = min( beta, minEval)
