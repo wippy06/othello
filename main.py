@@ -1,4 +1,4 @@
-import pygame, time
+import pygame, random
 from othello.constants import WIDTH,HEIGHT, SQUARE_SIZE, AI, DEPTH, AI_ON, WEIGHT0, WEIGHT1, AI_VS_AI
 from othello.game import Game
 from minimax.algorithm import minimax
@@ -21,7 +21,6 @@ def main():
     clock = pygame.time.Clock()
     game = Game(WIN)
     debugSelect = False
-
  
     while run:
         clock.tick(FPS)
@@ -29,6 +28,7 @@ def main():
         if game.turn == AI and AI_ON:
             new_board = minimax(game.get_board(), DEPTH, True, float("-inf"), float("inf"), WEIGHT0)
             aiSelect = game.ai_move(new_board[1])
+            
             if aiSelect:
                 print("pass")
 
@@ -37,6 +37,7 @@ def main():
         if game.notTurn == AI and AI_VS_AI and AI_ON:
             new_board = minimax(game.get_board(), DEPTH, False, float("-inf"), float("inf"), WEIGHT1)
             aiSelect = game.ai_move(new_board[1])
+            
             if aiSelect:
                 print("pass")
         

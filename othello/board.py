@@ -197,3 +197,6 @@ class Board:
                     value += PIECESQUARETABLE[row][col]
 
         return value
+    
+    def __repr__(self):
+        return str(self.board)

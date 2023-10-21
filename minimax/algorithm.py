@@ -16,12 +16,12 @@ def minimax(position, depth, max_player, alpha, beta, weight):
             evaluation = minimax(move, depth-1, False, alpha, beta, weight)[0]
             maxEval = max(maxEval,evaluation)
 
+            if maxEval == evaluation:
+                best_move = move
+
             alpha = max( alpha, maxEval)
             if beta <= alpha:
                 break
-
-            if maxEval == evaluation:
-                best_move = move
 
         return maxEval, best_move
     
@@ -32,12 +32,12 @@ def minimax(position, depth, max_player, alpha, beta, weight):
             evaluation = minimax(move, depth-1, True, alpha, beta, weight)[0]
             minEval = min(minEval,evaluation)
 
+            if minEval == evaluation:
+                best_move = move
+
             beta = min( beta, minEval)
             if beta <= alpha:
                 break
-
-            if minEval == evaluation:
-                best_move = move
 
         return minEval, best_move
 
