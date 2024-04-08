@@ -23,9 +23,6 @@ class Game:
     def winner(self):
         return self.board.winner()
 
-    def reset(self):
-        self._init()
-
     def select(self,row,col):
         for moves in self.board.get_valid_moves(self.turn, self.notTurn):
             if row == moves[0] and col == moves[1]:
@@ -34,10 +31,10 @@ class Game:
                 if self.board.get_valid_moves(self.turn,self.notTurn)==[]:
                     self.change_turn()
                     return True
-                break
-        
+                break       
 
     def draw_valid_moves(self, moves,colour):
+        
         radius = (SQUARE_SIZE//2)*0.30
         for move in moves:
             row,col=move
@@ -60,9 +57,10 @@ class Game:
         if self.board.board != board.board:
             self.board = board
             self.change_turn()
-            if self.board.get_valid_moves(self.turn,self.notTurn)==[]:
-                self.change_turn()
-                return True
+            return False
+        else:
+            self.change_turn()
+            return True
             
 
 
