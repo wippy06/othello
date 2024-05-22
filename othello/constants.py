@@ -13,16 +13,16 @@ BLACK = (0,0,0)
 GREY = (128,128,128)
 
 #checker board
-LIME = (0,186,0)
-GREEN = (0, 102, 0)
+LIME = (252,227,173)
+GREEN = (107, 34, 0)
 
 #AI
 AI_ON = True
-AI_VS_AI = True
+AI_VS_AI = False
 AI = WHITE
 PLAYER = BLACK
 DEPTH = 3
-LEARN = True
+LEARN = False
 
     #piece square table
 PIECESQUARETABLE = [

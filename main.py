@@ -77,7 +77,7 @@ def playGame(weight0, weight1):
                 row, col = get_row_col_from_mouse(pos)
                 select = game.select(row, col)
                 debugSelect = select
-                print(select)
+                #print(select)
                 if select:
                     print("pass")
                 game.update()    
@@ -133,4 +133,4 @@ def main():
 if LEARN == True:
     main()
 else:
-    playGame([6,7], [6,7])
+    playGame([24,14], [24,14])
